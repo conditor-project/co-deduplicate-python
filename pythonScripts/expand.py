@@ -3,27 +3,26 @@
 import sys
 import json
 import os
+import argparse
 
 parentDicrectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, parentDicrectory)
 
-import deduplicate.conf as conf  
+parser = argparse.ArgumentParser()
 
-## Decomment where you don't use the Web service
-# corpus = json.load(sys.stdin)
+parser.add_argument('--file', '-f', type=str, required=True)
+args = parser.parse_args()
 
-# for data in corpus :
-#     #data = json.loads(line)
-#     record = conf.Record(data['value'])
-#     dup = record.deduplicate()
-#     data["value"] = dup
-#     sys.stdout.write(json.dumps(data))
-#     sys.stdout.write('\n')
+import deduplicate.conf as conf
 
-for line in sys.stdin :
-    data = json.loads(line)
-    record = conf.Record(data['value'])
+fd = open(args.file, mode='r', encoding='utf8')
+corpus = json.load(fd)
+
+for data in corpus :
+    record = conf.Record(data)
     dup = record.deduplicate()
-    data["value"] = dup
+    data = dup
     sys.stdout.write(json.dumps(data))
     sys.stdout.write('\n')
+
+fd.close()
