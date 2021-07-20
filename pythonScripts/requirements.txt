@@ -1,0 +1,10 @@
+numpy
+unidecode
+pandas
+tqdm
+nose
+requests
+nltk
+langdetect
+elasticsearch
+
