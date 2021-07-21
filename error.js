@@ -1,8 +1,20 @@
 const errorList = {
+  JSONParsingError: 'JSONParsingError',
   WriteFileError: 'WriteFileError',
 };
 
 const list = [
+  {
+    name: errorList.JSONParsingError,
+    handle: (err, docObject) => {
+      err.message = 'Syntax error in JSON returned by the Python script.';
+
+      docObject.errCode = errorList.JSONParsingError;
+      docObject._errMsg = 'Erreur de syntaxe dans le JSON renvoyé par le script Python.';
+
+      return err;
+    },
+  },
   {
     name: errorList.WriteFileError,
     handle: (err, docObject) => {

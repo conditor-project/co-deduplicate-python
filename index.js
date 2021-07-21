@@ -28,14 +28,25 @@ business.doTheJob = (docObject, callback) => {
   fs.outputFile(pathToTmpDocObject, JSON.stringify(data), 'utf-8', (err) => {
     if (err) return callback(handleError(docObject, errorList.WriteFileError, err));
 
+    let errInPythonProcess;
     let duplicates;
     const pythonProcess = spawn('python3', [pathToPythonScript, '-f', pathToTmpDocObject]);
 
     pythonProcess.stdout.on('data', (duplicatesString) => {
-      duplicates = JSON.parse(duplicatesString).duplicates;
+      let jsonParsed;
+      try {
+        jsonParsed = JSON.parse(duplicatesString);
+      } catch (error) {
+        errInPythonProcess = handleError(docObject, errorList.JSONParsingError);
+        return;
+      }
+
+      duplicates = jsonParsed.duplicates;
     });
 
     pythonProcess.on('close', (code) => {
+      if (errInPythonProcess) return callback(errInPythonProcess);
+
       duplicates.forEach((duplicate) => {
         const found = docObject.duplicates.find((dupInDocObject) => dupInDocObject.sourceUid === duplicate.sourceUid);
         if (!found) docObject.duplicates.push(duplicate);
