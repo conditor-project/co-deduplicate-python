@@ -1,10 +1,6 @@
 const path = require('path');
 const { spawn } = require('child_process');
-const request = require('request');
-const async = require('async');
 const fs = require('fs-extra');
-const { getConfigPath, buildServiceURL } = require('./config/configGetter');
-const { errorList, handleError } = require('./error.js');
 
 const business = {};
 
@@ -37,26 +33,5 @@ business.doTheJob = (docObject, callback) => {
     });
   });
 };
-
-/**
- * Sends a request to the web service.
- * @param {object} formData The data to send to the web service.
- * @param {function} callback The callback.
- */
-function sendRequest (body, callback) {
-  const params = {
-    method: 'POST',
-    url: buildServiceURL(business.config),
-    body: Buffer.from(JSON.stringify(body)),
-    encoding: null,
-  };
-
-  request(params, (err, response, body) => {
-    return callback(err, {
-      response,
-      body,
-    });
-  });
-}
 
 module.exports = business;

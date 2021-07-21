@@ -1,32 +1,9 @@
 const errorList = {
-  HttpError: 'HttpError',
-  MissingDataError: 'MissingDataError',
-  NetworkError: 'NetworkError',
+  // TODO: Make a list of errors
 };
 
 const list = [
-  {
-    name: errorList.HttpError,
-    handle: (err, docObject) => {
-      err.message = `HTTP error with status code: ${err.code}.`;
-
-      docObject.errCode = errorList.HttpError;
-      docObject._errMsg = 'Données manquante dans le docObject.';
-
-      return err;
-    },
-  },
-  {
-    name: errorList.NetworkError,
-    handle: (err, docObject) => {
-      err.message = 'Network error.';
-
-      docObject.errCode = errorList.NetworkError;
-      docObject._errMsg = 'Erreur réseau.';
-
-      return err;
-    },
-  },
+  // TODO: Create a list of handlers for the errors above
 ];
 
 /**
