@@ -6,21 +6,6 @@ const { errorList, handleError } = require('./error');
 
 const business = {};
 
-business.beforeAnyJob = (callback) => {
-  let error;
-  const pythonProcess = spawn('python3', ['--version']);
-
-  pythonProcess.on('error', (err) => {
-    if (err.code === 'ENOENT') {
-      error = new Error('Python is not installed on the system.');
-    } else {
-      error = err;
-    }
-  });
-
-  pythonProcess.on('close', (code) => callback(error));
-};
-
 business.doTheJob = (docObject, callback) => {
   const data = [docObject];
   const pathToTmpDocObject = path.join(__dirname, 'tmpDocObject.json');
@@ -65,6 +50,21 @@ business.doTheJob = (docObject, callback) => {
       });
     });
   });
+};
+
+business.beforeAnyJob = (callback) => {
+  let error;
+  const pythonProcess = spawn('python3', ['--version']);
+
+  pythonProcess.on('error', (err) => {
+    if (err.code === 'ENOENT') {
+      error = new Error('Python is not installed on the system.');
+    } else {
+      error = err;
+    }
+  });
+
+  pythonProcess.on('close', (code) => callback(error));
 };
 
 module.exports = business;
