@@ -1,5 +1,6 @@
 const errorList = {
   JSONParsingError: 'JSONParsingError',
+  MissingDuplicatesKeyError: 'MissingDuplicatesKeyError',
   WriteFileError: 'WriteFileError',
 };
 
@@ -11,6 +12,17 @@ const list = [
 
       docObject.errCode = errorList.JSONParsingError;
       docObject._errMsg = 'Erreur de syntaxe dans le JSON renvoyé par le script Python.';
+
+      return err;
+    },
+  },
+  {
+    name: errorList.MissingDuplicatesKeyError,
+    handle: (err, docObject) => {
+      err.message = 'The JSON returned by the Python script does not contain a \'duplicates\' array.';
+
+      docObject.errCode = errorList.MissingDuplicatesKeyError;
+      docObject._errMsg = 'Le JSON renvoyé par le script Python ne contient pas de tableau \'duplicates\'.';
 
       return err;
     },

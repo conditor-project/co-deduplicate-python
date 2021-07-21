@@ -1,6 +1,7 @@
 const path = require('path');
 const { spawn } = require('child_process');
 const fs = require('fs-extra');
+const _ = require('lodash');
 const { errorList, handleError } = require('./error');
 
 const business = {};
@@ -38,6 +39,11 @@ business.doTheJob = (docObject, callback) => {
         jsonParsed = JSON.parse(duplicatesString);
       } catch (error) {
         errInPythonProcess = handleError(docObject, errorList.JSONParsingError);
+        return;
+      }
+
+      if (!jsonParsed.duplicates || !_.isArray(jsonParsed.duplicates)) {
+        errInPythonProcess = handleError(docObject, errorList.MissingDuplicatesKeyError);
         return;
       }
 
