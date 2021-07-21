@@ -6,20 +6,25 @@ const _ = require('lodash');
 const { errorList } = require('../error.js');
 const expected = require('./dataset/expected');
 const business = require('../index.js');
-const { getConfigPath } = require('../config/configGetter');
 
 const { expect } = chai;
 
 describe('index.js', () => {
   const data = require('./dataset/in/goodDocObjects.json');
 
-  data.forEach((docObject) => {
-    business.doTheJob(docObject, (err) => {
-      if (err) console.error(err);
+  describe('#doTheJob', () => {
+    it('testData.correct is correct', (done) => {
+      const correctData = _.cloneDeep(data[0]);
+      business.doTheJob(correctData, (err) => {
+        expect(correctData.duplicates).to.include.deep.members([expected.correct]);
+        expect(correctData.errCode).to.be.undefined;
+        expect(err).to.be.undefined;
+        done();
+      });
     });
   });
 
-  describe('#finalJob', () => {
+  /* describe('#finalJob', () => {
     it('testData.correct is correct', (done) => {
       const correctData = _.cloneDeep(data);
       business.config = require(getConfigPath()).get();
@@ -52,5 +57,5 @@ describe('index.js', () => {
         done();
       });
     });
-  });
+  }); */
 });

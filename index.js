@@ -1,50 +1,40 @@
+const path = require('path');
+const { spawn } = require('child_process');
 const request = require('request');
 const async = require('async');
+const fs = require('fs-extra');
 const { getConfigPath, buildServiceURL } = require('./config/configGetter');
 const { errorList, handleError } = require('./error.js');
 
 const business = {};
-business.config = require(getConfigPath()).get();
 
 business.doTheJob = (docObject, callback) => {
-  return callback();
-};
+  const data = [docObject];
+  const pathToTmpDocObject = path.join(__dirname, 'tmpDocObject.json');
+  const pathToPythonScript = path.join(__dirname, 'pythonScripts', 'expand.py');
 
-business.finalJob = (docObjects, callback) => {
-  const body = [];
+  fs.outputFile(path.join(__dirname, 'tmpDocObject.json'), JSON.stringify(data), 'utf-8', (err) => {
+    if (err) throw err;
 
-  for (let i = 0; i < docObjects.length; i++) {
-    body.push({
-      id: i,
-      value: docObjects[i],
+    let duplicates;
+    const pythonProcess = spawn('python3', [pathToPythonScript, '-f', pathToTmpDocObject]);
+
+    pythonProcess.stdout.on('data', (duplicatesString) => {
+      duplicates = JSON.parse(duplicatesString).duplicates;
     });
-  }
 
-  async.retry(business.config.retry, (retryCallback) => sendRequest(body, retryCallback), (err, result) => {
-    let finalError;
-
-    for (let i = 0; i < docObjects.length; i++) {
-      if (err) {
-        finalError = handleError(docObjects[i], errorList.NetworkError);
-        continue;
-      }
-
-      if (result.response.statusCode.toString()[0] !== '2') {
-        const error = new Error(`Service co-duplicates (${business.config.url}) responding with status code: ${result.response.statusCode}`);
-        error.code = result.response.statusCode;
-        finalError = handleError(docObjects[i], errorList.HttpError, error);
-        continue;
-      }
-
-      const response = JSON.parse(result.body.toString());
-      response[i].value.duplicates.forEach((duplicate) => {
-        const found = docObjects[i].duplicates.find((dupInDocObject) => dupInDocObject.sourceUid === duplicate.sourceUid);
-        if (!found) docObjects[i].duplicates.push(duplicate);
+    pythonProcess.on('close', (code) => {
+      duplicates.forEach((duplicate) => {
+        const found = docObject.duplicates.find((dupInDocObject) => dupInDocObject.sourceUid === duplicate.sourceUid);
+        if (!found) docObject.duplicates.push(duplicate);
       });
-    }
 
-    docObjects = [];
-    return callback(finalError);
+      fs.unlink(pathToTmpDocObject, (err) => {
+        if (err) throw err;
+
+        return callback();
+      });
+    });
   });
 };
 
