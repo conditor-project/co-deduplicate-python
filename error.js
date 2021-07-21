@@ -1,9 +1,17 @@
 const errorList = {
-  // TODO: Make a list of errors
+  WriteFileError: 'WriteFileError',
 };
 
 const list = [
-  // TODO: Create a list of handlers for the errors above
+  {
+    name: errorList.WriteFileError,
+    handle: (err, docObject) => {
+      docObject.errCode = errorList.WriteFileError;
+      docObject._errMsg = `Impossible d'écrire un fichier au chemin ${err.path}.`;
+
+      return err;
+    },
+  },
 ];
 
 /**

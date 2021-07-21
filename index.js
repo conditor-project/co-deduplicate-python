@@ -1,6 +1,7 @@
 const path = require('path');
 const { spawn } = require('child_process');
 const fs = require('fs-extra');
+const { errorList, handleError } = require('./error');
 
 const business = {};
 
@@ -9,8 +10,8 @@ business.doTheJob = (docObject, callback) => {
   const pathToTmpDocObject = path.join(__dirname, 'tmpDocObject.json');
   const pathToPythonScript = path.join(__dirname, 'pythonScripts', 'expand.py');
 
-  fs.outputFile(path.join(__dirname, 'tmpDocObject.json'), JSON.stringify(data), 'utf-8', (err) => {
-    if (err) throw err;
+  fs.outputFile(pathToTmpDocObject, JSON.stringify(data), 'utf-8', (err) => {
+    if (err) return callback(handleError(docObject, errorList.WriteFileError, err));
 
     let duplicates;
     const pythonProcess = spawn('python3', [pathToPythonScript, '-f', pathToTmpDocObject]);
