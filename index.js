@@ -2,6 +2,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 const fs = require('fs-extra');
 const _ = require('lodash');
+const VError = require('verror');
 const { errorList, handleError } = require('./error');
 
 const business = {};
@@ -53,18 +54,42 @@ business.doTheJob = (docObject, callback) => {
 };
 
 business.beforeAnyJob = (callback) => {
-  let error;
-  const pythonProcess = spawn('python3', ['--version']);
+  fs.readFile(path.join(__dirname, 'pythonScripts', 'requirements.txt'), 'utf-8', (err, data) => {
+    if (err) return callback(err);
 
-  pythonProcess.on('error', (err) => {
-    if (err.code === 'ENOENT') {
-      error = new Error('Python is not installed on the system.');
-    } else {
-      error = err;
-    }
+    const dependencies = data.split('\n').filter((value) => value !== '');
+    const errors = [];
+    let finalError;
+    const pythonProcess = spawn('python3', ['--version']);
+    const pipProcess = spawn('pip', ['install'].concat(dependencies));
+
+    pythonProcess.on('error', (err) => {
+      if (err.code === 'ENOENT') {
+        errors.push(new Error('Python is not installed on the system.'));
+      } else {
+        errors.push(err);
+      }
+    });
+
+    pythonProcess.on('close', (code) => {
+      console.log('python processed finished');
+    });
+
+    pipProcess.on('error', (err) => {
+      if (err.code === 'ENOENT') {
+        errors.push(new Error('Pip is not installed on the system.'));
+      } else {
+        errors.push(err);
+      }
+    });
+
+    pipProcess.on('close', (code) => {
+      console.log('pip process finished');
+      if (!_.isEmpty(errors)) finalError = VError.errorFromList(errors);
+
+      return callback(finalError);
+    });
   });
-
-  pythonProcess.on('close', (code) => callback(error));
 };
 
 module.exports = business;
