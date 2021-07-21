@@ -11,8 +11,17 @@ const { expect } = chai;
 describe('index.js', () => {
   const data = require('./dataset/in/goodDocObjects.json');
 
+  describe('#beforeAnyJob', () => {
+    it('Python is installed on the system.', (done) => {
+      business.beforeAnyJob((err) => {
+        expect(err).to.be.undefined;
+        done();
+      });
+    });
+  });
+
   describe('#doTheJob', () => {
-    it('testData.correct is correct', (done) => {
+    it('testData.correct is correct.', (done) => {
       const correctData = _.cloneDeep(data[0]);
       business.doTheJob(correctData, (err) => {
         expect(correctData.duplicates).to.include.deep.members([expected.correct]);
