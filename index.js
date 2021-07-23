@@ -1,5 +1,5 @@
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 const fs = require('fs-extra');
 const _ = require('lodash');
 const VError = require('verror');
@@ -60,36 +60,40 @@ business.beforeAnyJob = (callback) => {
     const dependencies = data.split('\n').filter((value) => value !== '');
     const errors = [];
     let finalError;
-    const pythonProcess = spawn('python3', ['--version']);
-    const pipProcess = spawn('pip', ['install'].concat(dependencies));
 
-    pythonProcess.on('error', (err) => {
-      if (err.code === 'ENOENT') {
-        errors.push(new Error('Python is not installed on the system.'));
-      } else {
-        errors.push(err);
-      }
+    const processes = [
+      spawnSync('python3', ['--version']),
+      spawnSync('pip', ['install'].concat(dependencies)),
+    ];
+
+    processes.forEach((process) => {
+      const processError = getProcessError(process);
+      if (processError) errors.push(processError);
     });
 
-    pythonProcess.on('close', (code) => {
-      console.log('python processed finished');
-    });
+    if (!_.isEmpty(errors)) finalError = VError.errorFromList(errors);
 
-    pipProcess.on('error', (err) => {
-      if (err.code === 'ENOENT') {
-        errors.push(new Error('Pip is not installed on the system.'));
-      } else {
-        errors.push(err);
-      }
-    });
-
-    pipProcess.on('close', (code) => {
-      console.log('pip process finished');
-      if (!_.isEmpty(errors)) finalError = VError.errorFromList(errors);
-
-      return callback(finalError);
-    });
+    return callback(finalError);
   });
 };
+
+/**
+ * Gets an error from a process and creates a more specific one if possible.
+ * @param {object} process The process.
+ * @returns {Error|null} If found, the error, `null` otherwise.
+ */
+function getProcessError (process) {
+  let finalError = null;
+
+  if (process.error) {
+    if (process.error.code === 'ENOENT') {
+      finalError = new VError(process.error, `${process.error.path} is not installed on the system`);
+    } else {
+      finalError = process.error;
+    }
+  }
+
+  return finalError;
+}
 
 module.exports = business;

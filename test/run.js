@@ -12,7 +12,7 @@ describe('index.js', () => {
   const data = require('./dataset/in/goodDocObjects.json');
 
   describe('#beforeAnyJob', () => {
-    it('Python is installed on the system.', (done) => {
+    it('Python and Pip are installed on the system.', (done) => {
       business.beforeAnyJob((err) => {
         expect(err).to.be.undefined;
         done();
