@@ -54,27 +54,28 @@ business.doTheJob = (docObject, callback) => {
 };
 
 business.beforeAnyJob = (callback) => {
-  fs.readFile(path.join(__dirname, 'pythonScripts', 'requirements.txt'), 'utf-8', (err, data) => {
-    if (err) return callback(err);
+  const requirementsFilePath = path.join(__dirname, 'pythonScripts', 'requirements.txt');
 
-    const dependencies = data.split('\n').filter((value) => value !== '');
-    const errors = [];
-    let finalError;
+  if (!fs.existsSync(requirementsFilePath)) {
+    return callback(new Error('Requirements file not found'));
+  }
 
-    const processes = [
-      spawnSync('python3', ['--version']),
-      spawnSync('pip', ['install'].concat(dependencies)),
-    ];
+  const errors = [];
+  let finalError;
 
-    processes.forEach((process) => {
-      const processError = getProcessError(process);
-      if (processError) errors.push(processError);
-    });
+  const processes = [
+    spawnSync('python3', ['--version']),
+    spawnSync('pip', ['install', '-r', path.join(__dirname, 'pythonScripts', 'requirements.txt')]),
+  ];
 
-    if (!_.isEmpty(errors)) finalError = VError.errorFromList(errors);
-
-    return callback(finalError);
+  processes.forEach((process) => {
+    const processError = getProcessError(process);
+    if (processError) errors.push(processError);
   });
+
+  if (!_.isEmpty(errors)) finalError = VError.errorFromList(errors);
+
+  return callback(finalError);
 };
 
 /**
