@@ -32,6 +32,18 @@ L'exécution se fera donc en appelant cette fonction depuis une instanciation de
 .
 ├── node_modules/                        // Modules NPM
 │   └── ...
+├── pythonScripts                        // Répertoire contenant le code source Python
+│   ├── deduplicate                      // Répertoire contenant le cœur du code métier Python
+│   │   ├── __pycache__                  // Cache Python
+│   │   │   └── ...
+│   │   ├── __init__.py
+│   │   ├── conf.py
+│   │   ├── params.py
+│   │   └── utils.py
+│   ├── __init__.py
+│   ├── expand.py                        // Point d'entrée du code Python
+│   ├── LICENSE                          // Licence
+│   └── requirement.txt                  // Dépendances Python
 ├── test/                                // Fichiers nécessaires aux tests unitaires
 │   ├── dataset/
 │   │   └── in/
