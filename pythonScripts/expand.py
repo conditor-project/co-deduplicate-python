@@ -5,18 +5,17 @@ import json
 import os
 import argparse
 
-parentDicrectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, parentDicrectory)
+parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, parentDirectory)
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--file', '-f', type=str, required=True)
+parser.add_argument('docobject_string', type=str)
 args = parser.parse_args()
 
 import deduplicate.conf as conf
 
-fd = open(args.file, mode='r', encoding='utf8')
-corpus = json.load(fd)
+corpus = json.loads(args.docobject_string)
 
 for data in corpus :
     record = conf.Record(data)
@@ -24,5 +23,3 @@ for data in corpus :
     data = dup
     sys.stdout.write(json.dumps(data))
     sys.stdout.write('\n')
-
-fd.close()
