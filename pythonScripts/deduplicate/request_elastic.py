@@ -1,13 +1,14 @@
-
 import os
-from utils import NoticeComparison
+from .utils import NoticeComparison
 from elasticsearch import RequestsHttpConnection
 from elasticsearch import Elasticsearch
-from params import titleStopwords
+from .params import titleStopwords
 from nltk.stem import SnowballStemmer
 from nltk.stem import PorterStemmer
 from langdetect import detect
 
+
+# Load envrionment variables
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -18,15 +19,14 @@ en = PorterStemmer()
 
 
 # Set connection config
-
 esUrl = os.environ.get("ES_URL", "http://localhost:9200")
 index = os.environ.get("INDEX")
 doc_type = os.environ.get("RECORD")
 proxies = os.environ.get("PROXIES")
-size =os.environ["RESPONSE_SIZE"]
+size = os.environ["RESPONSE_SIZE"]
 
 
-
+# Elastic search requests using proxies
 class MyConnection(RequestsHttpConnection):
     def __init__(self, *args, **kwargs):
         proxies = kwargs.pop('proxies', {})
@@ -50,6 +50,7 @@ class ESRequest() :
         pass
 
 
+# Instanciate elastic client and its request class
 esr = ESRequest()
 es = esr.es
 
@@ -88,31 +89,42 @@ class Record :
 
 
     def deduplicate(self) :
+        if not isinstance(self.record, dict) :
+            return {"error" : {"code" : 104, "type" : "<class 'Type'>", "message" : "Must be an Object"}}
+
+        if not bool(self.record):
+            return {"error" : {"code" : 103, "type" : "<class 'ValueError'>", "message" : "Empty object"}}
+
+        if "idConditor" not in self.record :
+            return {"error" : {"code" : 102, "type" : "<class 'KeyError'>", "message" : "KeyError('idConditor')"}}
+
+        if "sourceUid" not in self.record :
+            return {"error" : {"code" : 101, "type" : "<class 'KeyError'>", "message" : "KeyError('sourceUid')"}}
+
 
         try :
             duplicatesIdConditor = [x["idConditor"] for x in self.record["duplicates"]]
+            duplicatesIdConditor.append(self.record["idConditor"])
             res = self.query()
-            if not res['hits']['hits'] :
-                return {'duplicates' : self.dupList}
-            else :
-                for i, rc in enumerate(res["hits"]["hits"]) :
-                    dupCandidateRecord = rc["_source"]
-                    comp = NoticeComparison(self.record, dupCandidateRecord)
-                    comp.run()
-                    if comp.result == 1 :
-                        if dupCandidateRecord['idConditor'] not in duplicatesIdConditor :
-                            self.dupList.append(
-                                {
-                                    "idConditor" : dupCandidateRecord['idConditor'],
-                                    "sourceUid" : dupCandidateRecord['sourceUid'],
-                                    "type" : dupCandidateRecord['typeConditor'],
-                                    "source" : dupCandidateRecord['source'],
-                                    "deduplicateRules" : comp.comment,
-                                }
-                            )
+
+            for i, rc in enumerate(res["hits"]["hits"]) :
+                dupCandidateRecord = rc["_source"]
+                comp = NoticeComparison(self.record, dupCandidateRecord)
+                comp.run()
+                if comp.result == 1 :
+                    if dupCandidateRecord['idConditor'] not in duplicatesIdConditor :
+                        self.dupList.append(
+                            {
+                                "idConditor" : dupCandidateRecord['idConditor'],
+                                "sourceUid" : dupCandidateRecord['sourceUid'],
+                                "type" : dupCandidateRecord['typeConditor'],
+                                "source" : dupCandidateRecord['source'],
+                                "deduplicateRules" : comp.comment,
+                            }
+                        )
             return {'duplicates' : self.dupList}
         except Exception as err :
-            return {"error" : 100, "type" : err.__class__}
+            return {"error" : {"code" : 100, "type" : err.__class__, "message" : err}}
 
 
 if __name__ == "__main__" :
