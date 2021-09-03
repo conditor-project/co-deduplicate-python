@@ -7,12 +7,12 @@ from nltk.stem import SnowballStemmer
 from nltk.stem import PorterStemmer
 from langdetect import detect
 
-ROOT = pathlib.Path(__file__).resolve().parent
-print(ROOT)
-sys.path.insert(1, ROOT)
+# Set path for importing deduplicate module
+parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, parentDirectory)
 
-from .utils import NoticeComparison
-from .params import titleStopwords
+from deduplicate.utils import NoticeComparison
+from deduplicate.params import titleStopwords
 
 
 # Load envrionment variables
@@ -129,7 +129,7 @@ class Record :
                                 "deduplicateRules" : comp.comment,
                             }
                         )
-            return {'duplicates' : self.dupList}
+            return self.dupList
         except Exception as err :
             return {"error" : {"code" : 100, "type" : err.__class__, "message" : err}}
 
