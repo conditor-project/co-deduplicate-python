@@ -35,7 +35,17 @@ record_error_code = 104
 
 # Import true Object
 with open("tests/test.json", encoding="utf8") as f :
-    record7 = json.load(f)[1]
+    record7 = json.load(f)[0]
+
+test_dic = {"duplicates" :
+        {
+        "idConditor" : "XXXX",
+        "sourceUid" : "XXXX",
+        "type" : "XXXX",
+        "source" : "XXXX",
+        "deduplicateRules" : "XXXX"
+    }
+}
 
 
 
@@ -73,10 +83,8 @@ class Test(unittest.TestCase) :
 
     def test_deduplicate(self) :
         rc7 = Record(record7)
-        print(type(rc7.record))
         tt = rc7.deduplicate()
-        print(f"tt {tt}")
-        #self.assertEqual(tt.get('error').get("code"), record_error_code)
+        self.assertTrue("duplicates", tt)
 
 
 
