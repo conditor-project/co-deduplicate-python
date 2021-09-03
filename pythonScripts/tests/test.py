@@ -3,13 +3,11 @@ import sys
 import json
 import unittest
 
-# Get current directory
-cur_dir = os.getcwd()
-
 # Set path for importing deduplicate module
-sys.path.insert(1, cur_dir)
+parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, parentDirectory)
 
-from deduplicate.request_elastic import Record
+from deduplicate.deduplicate import Record
 
 
 # Check if docObject contains idConditor and sourceUid
@@ -34,7 +32,7 @@ record6 = "This a test for string input"
 record_error_code = 104
 
 # Import true Object
-with open("tests/test.json", encoding="utf8") as f :
+with open(os.path.join(parentDirectory, "tests/test.json"), encoding="utf8") as f :
     record7 = json.load(f)[0]
 
 
