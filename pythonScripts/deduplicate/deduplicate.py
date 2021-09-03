@@ -1,11 +1,18 @@
 import os
-from .utils import NoticeComparison
+import sys
+import pathlib
 from elasticsearch import RequestsHttpConnection
 from elasticsearch import Elasticsearch
-from .params import titleStopwords
 from nltk.stem import SnowballStemmer
 from nltk.stem import PorterStemmer
 from langdetect import detect
+
+ROOT = pathlib.Path(__file__).resolve().parent
+print(ROOT)
+sys.path.insert(1, ROOT)
+
+from .utils import NoticeComparison
+from .params import titleStopwords
 
 
 # Load envrionment variables
