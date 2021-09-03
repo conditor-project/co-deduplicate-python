@@ -1,13 +1,18 @@
-import json
+import os
+import sys
 import math
 import string
 import unidecode
 import base64
 import itertools as it
-import pandas as pd
 from unicodedata import normalize
 import xml.etree.ElementTree as ET
-from .params import decisionGrid, typeConditorCategory, titleStopwords
+
+# Set path for importing deduplicate module
+parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, parentDirectory)
+
+from deduplicate.params import decisionGrid, typeConditorCategory, titleStopwords
 
 class Notice :
 
