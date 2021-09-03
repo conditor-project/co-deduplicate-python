@@ -1,0 +1,92 @@
+[
+  {
+    "pageRange": "636",
+    "duplicates": [
+        {
+            "sourceUid": "hal$halshs-02983519",
+            "sessionName": "HAL_2020-12-18_2020",
+            "rules": [
+                "Article : 2Collation:TiC_FRE+xissn+issue+page+annee",
+                "Article : 2Collation:TiC+Ti_Source+issue+page+annee",
+                "Article : 2Collation:TiC_FRE+Ti_Source+issue+page+annee",
+                "Article : 2Collation:TiC+xissn+issue+page+annee"
+            ],
+            "source": "hal",
+            "idConditor": "4OroH_mMsCI2zZejUprhSLXkM"
+        }
+    ],
+    "sourceUid": "hal$halshs-02989439",
+    "idConditor": "9dQVaGNU7lEpgAh2e9A0sVLV8",
+    "issue": "11",
+    "issn": [
+        "0242-5424"
+    ],
+    "documentType": [
+        "ART"
+    ],
+    "isbn": [],
+    "typeConditor": "Article",
+    "eissn": [
+        "1760-7612"
+    ],
+    "title": {
+        "default": "Du bon usage de l'article L. 16 B du livre des proc\u00e9dures fiscales",
+        "monography": "",
+        "journal": "Revue des Soci\u00e9t\u00e9s",
+        "en": "",
+        "fr": "Du bon usage de l'article L. 16 B du livre des proc\u00e9dures fiscales",
+        "meeting": ""
+    },
+    "publicationDate": "2020-11-07",
+    "_score": 0.8020777,
+    "_sort": [
+        162
+    ]
+},
+{
+    "pageRange": "215001",
+    "duplicates": [
+        {
+            "sourceUid": "hal$hal-02557706",
+            "sessionName": "HAL_2020-12-18_2020",
+            "rules": [
+                "Article : 1ID:doi+TiC_ENG",
+                "Article : 1ID:arxiv+TiC_ENG",
+                "Article : 1ID:doi+TiC",
+                "Article : 1ID:arxiv+TiC",
+                "Article : 1ID:arxiv+doi"
+            ],
+            "source": "hal",
+            "idConditor": "6tWdGb3xRfaV8wV4vrmtbJWL6"
+        }
+    ],
+    "issue": "21",
+    "documentType": [
+        "ART"
+    ],
+    "isbn": [],
+    "typeConditor": "Article",
+    "eissn": [
+        "1361-6382"
+    ],
+    "title": {
+        "default": "The cosmological constant from conformal transformations: M\u00f6bius invariance and Schwarzian action",
+        "monography": "",
+        "journal": "Classical and Quantum Gravity",
+        "en": "The cosmological constant from conformal transformations: M\u00f6bius invariance and Schwarzian action",
+        "fr": "",
+        "meeting": ""
+    },
+    "volume": "37",
+    "sourceUid": "hal$hal-02992008",
+    "issn": [
+        "0264-9381"
+    ],
+    "publicationDate": "2020-10-02",
+    "doi": "10.1088/1361-6382/abb577",
+    "_score": 0.8020777,
+    "_sort": [
+        685
+    ]
+}
+]
