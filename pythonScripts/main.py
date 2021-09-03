@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+#!/usr/bin/env/python
 import sys
 import json
 import os
@@ -22,5 +22,5 @@ corpus = json.loads(args.docobject_string)
 for data in corpus :
     record = Record(data)
     duplicate = record.deduplicate()
-    sys.stdout.write(json.dumps(str(duplicate)))
+    sys.stdout.write(json.dumps(duplicate))
     sys.stdout.write('\n')
