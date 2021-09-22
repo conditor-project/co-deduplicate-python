@@ -134,5 +134,27 @@ class Record :
         except Exception as err :
             return {"error" : {"code" : 100, "type" : err.__class__, "message" : err}}
 
+if __name__ == "__main__" :
+    from time import time
+    import json
+    import sys
+
+    # Set path for importing deduplicate module
+    parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    sys.path.insert(0, parentDirectory)
+
+    filename = os.path.join(parentDirectory, "tests/test.json")
+    print(filename)
+    with open(filename) as f :
+        datas = json.load(f)
+    for data in datas:
+        a = time()
+        record = Record(data)
+
+        dup = record.deduplicate()
+        print(f"Time Elapsed {time() - a}")
+        print(data["idConditor"])
+        print(dup)
+        print()
 
 
