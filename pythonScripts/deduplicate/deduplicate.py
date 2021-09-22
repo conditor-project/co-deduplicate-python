@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import pathlib
 from elasticsearch import RequestsHttpConnection
 from elasticsearch import Elasticsearch
@@ -29,7 +30,7 @@ en = PorterStemmer()
 esUrl = os.environ.get("ES_URL", "http://localhost:9200")
 index = os.environ.get("INDEX")
 doc_type = os.environ.get("RECORD")
-proxies = os.environ.get("PROXIES")
+proxies = json.loads(os.environ.get("PROXIES"))
 size = os.environ["RESPONSE_SIZE"]
 
 
@@ -132,23 +133,6 @@ class Record :
             return self.dupList
         except Exception as err :
             return {"error" : {"code" : 100, "type" : err.__class__, "message" : err}}
-
-
-if __name__ == "__main__" :
-    from time import time
-    import json
-    import sys
-
-    filename = "/home/dago/Documents/TDM/sprint-6/co-near_dup/test.json"
-    with open(filename) as f :
-        datas = json.load(f)
-    for data in datas:
-        a = time()
-        record = Record(data)
-        dup = record.deduplicate()
-        print(f"Time Elapsed {time() - a}")
-        print(dup)
-        print()
 
 
 
