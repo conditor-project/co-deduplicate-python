@@ -9,27 +9,23 @@ const business = {};
 
 business.doTheJob = (docObject, callback) => {
   const data = [docObject];
-  const pathToPythonScript = path.join(__dirname, 'pythonScripts', 'expand.py');
+  const pathToPythonScript = path.join(__dirname, 'pythonScripts', 'main.py');
 
   let errInPythonProcess;
   let duplicates;
   const pythonProcess = spawn('python3', [pathToPythonScript, JSON.stringify(data)]);
 
   pythonProcess.stdout.on('data', (duplicatesString) => {
-    let jsonParsed;
     try {
-      jsonParsed = JSON.parse(duplicatesString);
+      duplicates = JSON.parse(duplicatesString.toString());
     } catch (error) {
       errInPythonProcess = handleError(docObject, errorList.JSONParsingError);
       return;
     }
 
-    if (!jsonParsed.duplicates || !_.isArray(jsonParsed.duplicates)) {
+    if (!duplicates || !_.isArray(duplicates)) {
       errInPythonProcess = handleError(docObject, errorList.MissingDuplicatesKeyError);
-      return;
     }
-
-    duplicates = jsonParsed.duplicates;
   });
 
   pythonProcess.on('close', (code) => {
