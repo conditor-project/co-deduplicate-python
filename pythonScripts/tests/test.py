@@ -45,32 +45,32 @@ class Test(unittest.TestCase) :
     def test_idConditor_and_sourceUid(self) :
         rc1 = Record(record1)
         tt = rc1.deduplicate()
-        self.assertEqual(tt.get('error').get("code"), record1_error_code)
+        self.assertEqual(tt.get("error").get("code"), record1_error_code)
 
     def test_not_idConditor(self) :
         rc2 = Record(record2)
         tt = rc2.deduplicate()
-        self.assertEqual(tt.get('error').get("code"), record2_error_code)
+        self.assertEqual(tt.get("error").get("code"), record2_error_code)
 
     def test_not_sourceUid(self) :
         rc3 = Record(record3)
         tt = rc3.deduplicate()
-        self.assertEqual(tt.get('error').get("code"), record3_error_code)
+        self.assertEqual(tt.get("error").get("code"), record3_error_code)
 
     def test_empty_docObject(self) :
         rc4 = Record(record4)
         tt = rc4.deduplicate()
-        self.assertEqual(tt.get('error').get("code"), record4_error_code)
+        self.assertEqual(tt.get("error").get("code"), record4_error_code)
 
     def test_input_list(self) :
         rc5 = Record(record6)
         tt = rc5.deduplicate()
-        self.assertEqual(tt.get('error').get("code"), record_error_code)
+        self.assertEqual(tt.get("error").get("code"), record_error_code)
 
     def test_input_string(self) :
         rc6 = Record(record6)
         tt = rc6.deduplicate()
-        self.assertEqual(tt.get('error').get("code"), record_error_code)
+        self.assertEqual(tt.get("error").get("code"), record_error_code)
 
     def test_deduplicate(self) :
         rc7 = Record(record7)

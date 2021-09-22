@@ -10,82 +10,82 @@ typeConditorCategory = {
     "Thèse" :  "thèse",
     "Ouvrage" : "ouvrage",
     "Rapport" : "ouvrage",
-    "Autre" : "autre" 
+    "Autre" : "autre"
 }
 
 
 titleStopwords = {
- 'Introduction': 'introduction',
- 'Présentation': 'presentation',
- 'Préface': 'preface',
- 'Reply': 'reply',
- 'Editorial': 'editorial',
- 'Foreword': 'foreword',
- 'Conclusion': 'conclusion',
- 'Preface': 'preface',
- 'Épilogue': 'epilogue',
- 'France': 'france',
- 'Prologo': 'prologo',
- 'introduction': 'introduction',
- 'Introducción': 'introduccion',
- 'Conclusions': 'conclusions',
- 'Prólogo': 'prologo',
- 'Éditorial': 'editorial',
- 'Index': 'index',
- 'Предисловие': 'predislovie',
- 'Remerciements': 'remerciements',
- 'Erratum': 'erratum',
- 'Response': 'response',
- 'Glossaire': 'glossaire',
- 'Livres': 'livres',
- 'Discussion': 'discussion',
- 'Acknowledgements': 'acknowledgements',
- 'Manufacturing': 'manufacturing',
- 'References': 'references',
- 'Energy': 'energy',
- 'Bibliography': 'bibliography',
- 'Transport': 'transport',
- 'Resumen': 'resumen',
- 'Finance': 'finance',
- 'Bibliographie': 'bibliographie',
- 'Annexes': 'annexes',
- 'Abbreviations': 'abbreviations',
- 'Idées': 'idees',
- 'préface': 'preface',
- 'Overview': 'overview',
- 'Conclusión': 'conclusion',
- 'Mining': 'mining',
- 'Acronyms': 'acronyms',
- 'Liminaire': 'liminaire',
- 'Postface': 'postface',
- 'Epilogue': 'epilogue',
- 'REPLY': 'reply',
- 'Corrigendum': 'corrigendum',
- 'Sources': 'sources',
- 'PRÉFACE': 'preface',
- 'Introduccion': 'introduccion',
- 'Abréviations': 'abreviations',
- 'conclusion': 'conclusion',
- 'OVERVIEW': 'overview',
- 'introducción': 'introduccion',
- 'EDITORIAL': 'editorial',
- 'ПРЕДИСЛОВИЕ': 'predislovie',
- 'ERRATUM': 'erratum',
- 'Références': 'references',
- 'INDEX': 'index',
- 'Presentation': 'presentation',
- 'BIBLIOGRAPHY': 'bibliography',
- 'CORRIGENDUM': 'corrigendum',
- 'PREFACE': 'preface',
- 'INTRODUCTION': 'introduction'}
+ "Introduction": "introduction",
+ "Présentation": "presentation",
+ "Préface": "preface",
+ "Reply": "reply",
+ "Editorial": "editorial",
+ "Foreword": "foreword",
+ "Conclusion": "conclusion",
+ "Preface": "preface",
+ "Épilogue": "epilogue",
+ "France": "france",
+ "Prologo": "prologo",
+ "introduction": "introduction",
+ "Introducción": "introduccion",
+ "Conclusions": "conclusions",
+ "Prólogo": "prologo",
+ "Éditorial": "editorial",
+ "Index": "index",
+ "Предисловие": "predislovie",
+ "Remerciements": "remerciements",
+ "Erratum": "erratum",
+ "Response": "response",
+ "Glossaire": "glossaire",
+ "Livres": "livres",
+ "Discussion": "discussion",
+ "Acknowledgements": "acknowledgements",
+ "Manufacturing": "manufacturing",
+ "References": "references",
+ "Energy": "energy",
+ "Bibliography": "bibliography",
+ "Transport": "transport",
+ "Resumen": "resumen",
+ "Finance": "finance",
+ "Bibliographie": "bibliographie",
+ "Annexes": "annexes",
+ "Abbreviations": "abbreviations",
+ "Idées": "idees",
+ "préface": "preface",
+ "Overview": "overview",
+ "Conclusión": "conclusion",
+ "Mining": "mining",
+ "Acronyms": "acronyms",
+ "Liminaire": "liminaire",
+ "Postface": "postface",
+ "Epilogue": "epilogue",
+ "REPLY": "reply",
+ "Corrigendum": "corrigendum",
+ "Sources": "sources",
+ "PRÉFACE": "preface",
+ "Introduccion": "introduccion",
+ "Abréviations": "abreviations",
+ "conclusion": "conclusion",
+ "OVERVIEW": "overview",
+ "introducción": "introduccion",
+ "EDITORIAL": "editorial",
+ "ПРЕДИСЛОВИЕ": "predislovie",
+ "ERRATUM": "erratum",
+ "Références": "references",
+ "INDEX": "index",
+ "Presentation": "presentation",
+ "BIBLIOGRAPHY": "bibliography",
+ "CORRIGENDUM": "corrigendum",
+ "PREFACE": "preface",
+ "INTRODUCTION": "introduction"}
 
 """
 Decision grid for near duplicates validation
-there are 5 points columns which are : 
-    - identifier : 
+there are 5 points columns which are :
+    - identifier :
     - pageRange
     - volumaison
-    - publishing source 
+    - publishing source
     - title
 That is set of five filled of -1,0 or 1
 """
@@ -102,7 +102,7 @@ decisionGrid = {
     (1,1,0,-1,1) : (0,"1id, 1page, 0vol, #source, 1title"),
     (1,1,0,-1,-1) : (-1,"1id, 1page, 0vol, #source, #title"),
     (1,1,0,-1,0) : (0,"1id, 1page, 0vol, #source, 0title"),
-    
+
     (1,1,1,0,1) : (1,"1id, 1page, 1vol, 0source, 1title"),
     (1,1,1,0,-1) : (0,"1id, 1page, 1vol, 0source, #title"),
     (1,1,1,0,0) : (1,"1id, 1page, 1vol, 0source, 0title"),
@@ -124,7 +124,7 @@ decisionGrid = {
     (1,1,-1,-1,0) : (-1,"1id, 1page, #vol, #source, 0title"),
 
 
-    # id = 1 Page = 0 
+    # id = 1 Page = 0
     (1,0,0,0,1) : (0,"1id, 0page, 0vol, 0source, 1title"),
     (1,0,0,0,-1) : (-1,"1id, 0page, 0vol, 0source, #title"),
     (1,0,0,0,0) : (0,"1id, 0page, 0vol, 0source, 0title"),
@@ -136,7 +136,7 @@ decisionGrid = {
     (1,0,0,-1,0) : (-1,"1id, 0page, 0vol, #source, 0title"),
 
 
-    (1,0,1,0,1) : (0,"1id, 0page, 1vol, 0source, 1title"),  
+    (1,0,1,0,1) : (0,"1id, 0page, 1vol, 0source, 1title"),
     (1,0,1,0,-1) : (-1,"1id, 0page, 1vol, 0source, #title"),
     (1,0,1,0,0) : (0,"1id, 0page, 1vol, 0source, 0title"),
     (1,0,1,1,1) : (1,"1id, 0page, 1vol, 1source, 1title"),
@@ -145,7 +145,7 @@ decisionGrid = {
     (1,0,1,-1,1) : (0,"1id, 0page, 1vol, #source, 1title"),
     (1,0,1,-1,-1) : (-1,"1id, 0page, 1vol, #source, #title"),
     (1,0,1,-1,0) : (-1,"1id, 0page, 1vol, #source, 0title"),
-    
+
     (1,0,-1,0,1) : (0,"1id, 0page, #vol, 0source, 1title"),
     (1,0,-1,0,-1) : (-1,"1id, 0page, #vol, 0source, #title"),
     (1,0,-1,0,0) : (0,"1id, 0page, #vol, 0source, 0title"),
@@ -156,7 +156,7 @@ decisionGrid = {
     (1,0,-1,-1,-1) : (-1,"1id, 0page, #vol, #source, #title"),
     (1,0,-1,-1,0) : (-1,"1id, 0page, #vol, #source, 0title"),
 
-    # id = 1 Page = -1 
+    # id = 1 Page = -1
     (1,-1,0,0,1) : (-1,"1id, #page, 0vol, 0source, 1title"),
     (1,-1,0,0,-1) : (-1,"1id, #page, 0vol, 0source, #title"),
     (1,-1,0,0,0) : (-1,"1id, #page, 0vol, 0source, 0title"),
@@ -176,7 +176,7 @@ decisionGrid = {
     (1,-1,1,-1,1) : (-1,"1id, #page, 1vol, #source, 1title"),
     (1,-1,1,-1,-1) : (-1,"1id, #page, 1vol, #source, #title"),
     (1,-1,1,-1,0) : (-1,"1id, #page, 1vol, #source, 0title"),
- 
+
     (1,-1,-1,0,1) : (-1,"1id, #page, #vol, 0source, 1title"),
     (1,-1,-1,0,-1) : (-1,"1id, #page, #vol, 0source, #title"),
     (1,-1,-1,0,0) : (-1,"1id, #page, #vol, 0source, 0title"),
@@ -187,7 +187,7 @@ decisionGrid = {
     (1,-1,-1,-1,-1) : (-1,"1id, #page, #vol, #source, #title"),
     (1,-1,-1,-1,0) : (-1,"1id, #page, #vol, #source, 0title"),
 
-    # id = 0 Page = -1 
+    # id = 0 Page = -1
     (0,-1,0,0,1) : (0,"0id, #page, 0vol, 0source, 1title"),
     (0,-1,0,0,-1) : (-1,"0id, #page, 0vol, 0source, #title"),
     (0,-1,0,0,0) : (0,"0id, #page, 0vol, 0source, 0title"),
@@ -207,7 +207,7 @@ decisionGrid = {
     (0,-1,1,-1,1) : (-1,"0id, #page, 1vol, #source, 1title"),
     (0,-1,1,-1,-1) : (-1,"0id, #page, 1vol, #source, #title"),
     (0,-1,1,-1,0) : (-1,"0id, #page, 1vol, #source, 0title"),
- 
+
     (0,-1,-1,0,1) : (-1,"0id, #page, #vol, 0source, 1title"),
     (0,-1,-1,0,-1) : (-1,"0id, #page, #vol, 0source, #title"),
     (0,-1,-1,0,0) : (-1,"0id, #page, #vol, 0source, 0title"),
@@ -219,7 +219,7 @@ decisionGrid = {
     (0,-1,-1,-1,0) : (-1,"0id, #page, #vol, #source, 0title"),
 
 
-# id = 0 Page = 0 
+# id = 0 Page = 0
     (0,0,0,0,1) : (0,"0id, 0page, 0vol, 0source, 1title"),
     (0,0,0,0,-1) : (0,"0id, 0page, 0vol, 0source, #title"),
     (0,0,0,0,0) : (0,"0id, 0page, 0vol, 0source, 0title"),
@@ -239,7 +239,7 @@ decisionGrid = {
     (0,0,1,-1,1) : (-1,"0id, 0page, 1vol, #source, 1title"),
     (0,0,1,-1,-1) : (-1,"0id, 0page, 1vol, #source, #title"),
     (0,0,1,-1,0) : (0,"0id, 0page, 1vol, #source, 0title"),
- 
+
     (0,0,-1,0,1) : (0,"0id, 0page, #vol, 0source, 1title"),
     (0,0,-1,0,-1) : (-1,"0id, 0page, #vol, 0source, #title"),
     (0,0,-1,0,0) : (-1,"0id, 0page, #vol, 0source, 0title"),
@@ -250,7 +250,7 @@ decisionGrid = {
     (0,0,-1,-1,-1) : (-1,"0id, 0page, #vol, #source, #title"),
     (0,0,-1,-1,0) : (-1,"0id, 0page, #vol, #source, 0title"),
 
-# id = 0 Page = 1 
+# id = 0 Page = 1
     (0,1,0,0,1) : (0,"0id, 1page, 0vol, 0source, 1title"),
     (0,1,0,0,-1) : (0,"0id, 1page, 0vol, 0source, #title"),
     (0,1,0,0,0) : (0,"0id, 1page, 0vol, 0source, 0title"),
@@ -270,7 +270,7 @@ decisionGrid = {
     (0,1,1,-1,1) : (0,"0id, 1page, 1vol, #source, 1title"),
     (0,1,1,-1,-1) : (-1,"0id, 1page, 1vol, #source, #title"),
     (0,1,1,-1,-0) : (0,"0id, 1page, 1vol, #source, 0title"),
- 
+
     (0,1,-1,0,1) : (-1,"0id, 1page, #vol, 0source, 1title"),
     (0,1,-1,0,-1) : (-1,"0id, 1page, #vol, 0source, #title"),
     (0,1,-1,0,0) : (0,"0id, 1page, #vol, 0source, 0title"),
@@ -282,7 +282,7 @@ decisionGrid = {
     (0,1,-1,-1,0) : (-1,"0id, 1page, #vol, #source, 0title"),
 
 
-# id = -1 Page = -1 
+# id = -1 Page = -1
     (-1,-1,0,0,1) : (-1,"#id, #page, 0vol, 0source, 1title"),
     (-1,-1,0,0,-1) : (-1,"#id, #page, 0vol, 0source, #title"),
     (-1,-1,0,0,0) : (-1,"#id, #page, 0vol, 0source, 0title"),
@@ -313,7 +313,7 @@ decisionGrid = {
     (-1,-1,-1,-1,-1) : (-1,"#id, #page, #vol, #source, #title"),
     (-1,-1,-1,1,-1) : (-1,"#id, #page, #vol, #source, 0title"),
 
-# id = -1 Page = 0 
+# id = -1 Page = 0
     (-1,0,0,0,1) : (-1,"#id, 0page, 0vol, 0source, 1title"),
     (-1,0,0,0,-1) : (-1,"#id, 0page, 0vol, 0source, #title"),
     (-1,0,0,0,0) : (0,"#id, 0page, 0vol, 0source, 0title"),
@@ -333,7 +333,7 @@ decisionGrid = {
     (-1,0,1,-1,1) : (-1,"#id, 0page, 1vol, #source, 1title"),
     (-1,0,1,-1,-1) : (-1,"#id, 0page, 1vol, #source, #title"),
     (-1,0,1,-1,0) : (-1,"#id, 0page, 1vol, #source, 0title"),
- 
+
     (-1,0,-1,0,1) : (-1,"#id, 0page, #vol, 0source, 1title"),
     (-1,0,-1,0,-1) : (-1,"#id, 0page, #vol, 0source, #title"),
     (-1,0,-1,0,0) : (-1,"#id, 0page, #vol, 0source, 0title"),
@@ -344,10 +344,10 @@ decisionGrid = {
     (-1,0,-1,-1,-1) : (-1,"#id, 0page, #vol, #source, #title"),
     (-1,0,-1,-1,0) : (-1,"#id, 0page, #vol, #source, 0title"),
 
-# id = -1 Page = 1 
-    (-1,1,0,0,1) : (-1,"#id, 1page, 0vol, 0source, 1title"),   # automate =>  Non doublons (dans le doute) 
+# id = -1 Page = 1
+    (-1,1,0,0,1) : (-1,"#id, 1page, 0vol, 0source, 1title"),   # automate =>  Non doublons (dans le doute)
     (-1,1,0,0,-1) : (-1,"#id, 1page, 0vol, 0source, #title"),
-    (-1,1,0,0,0) : (0,"#id, 1page, 0vol, 0source, 0title"), 
+    (-1,1,0,0,0) : (0,"#id, 1page, 0vol, 0source, 0title"),
     (-1,1,0,1,1) : (-1, "#id, 1page, 0vol, 1source, 1title"),
     (-1,1,0,1,-1) : (-1,"#id, 1page, 0vol, 1source, #title"),
     (-1,1,0,1,0) : (-1,"#id, 1page, 0vol, 1source, 0title"),
@@ -364,7 +364,7 @@ decisionGrid = {
     (-1,1,1,-1,1) : (-1,"#id, 1page, 1vol, #source, 1title"),
     (-1,1,1,-1,-1) : (-1,"#id, 1page, 1vol, #source, #title"),
     (-1,1,1,-1,0) : (-1,"#id, 1page, 1vol, #source, 0title"),
- 
+
     (-1,1,-1,0,1) : (-1,"#id, 1page, #vol, 0source, 1title"),
     (-1,1,-1,0,-1) : (-1,"#id, 1page, #vol, 0source, #title"),
     (-1,1,-1,0,0) : (-1,"#id, 1page, #vol, 0source, 0title"),

@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-import pathlib
 from elasticsearch import RequestsHttpConnection
 from elasticsearch import Elasticsearch
 from nltk.stem import SnowballStemmer
@@ -21,8 +20,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# Instaciantye langdetctor
-fr = SnowballStemmer('french')
+# Instantiate langdetect
+fr = SnowballStemmer("french")
 en = PorterStemmer()
 
 
@@ -37,7 +36,7 @@ size = os.environ["RESPONSE_SIZE"]
 # Elastic search requests using proxies
 class MyConnection(RequestsHttpConnection):
     def __init__(self, *args, **kwargs):
-        proxies = kwargs.pop('proxies', {})
+        proxies = kwargs.pop("proxies", {})
         super(MyConnection, self).__init__(*args, **kwargs)
         self.session.proxies = proxies
 
@@ -74,23 +73,25 @@ class Record :
         return " ".join([x for x in tokens if x not in titleStopwords])
 
     def query(self) :
-        titleDefault = self.record['title']['default']
+        titleDefault = self.record["title"]["default"]
         req = self.myStemmer(titleDefault)
         body = {
-            'query': {
-                'bool': {
-                    'must': [
-                        { 'match': {
-                            'title.default': {
-                            'query' : req,
-                            'fuzziness': "AUTO",
-                            'minimum_should_match': '70%'
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "title.default": {
+                                    "query" : req,
+                                    "fuzziness": "AUTO",
+                                    "minimum_should_match": "70%"
                                 }
                             }
-                        }]
                         }
-                    }
+                    ]
                 }
+            }
+        }
 
         res = self.es.search(index =index, body = body)
         return res
@@ -120,13 +121,13 @@ class Record :
                 comp = NoticeComparison(self.record, dupCandidateRecord)
                 comp.run()
                 if comp.result == 1 :
-                    if dupCandidateRecord['idConditor'] not in duplicatesIdConditor :
+                    if dupCandidateRecord["idConditor"] not in duplicatesIdConditor :
                         self.dupList.append(
                             {
-                                "idConditor" : dupCandidateRecord['idConditor'],
-                                "sourceUid" : dupCandidateRecord['sourceUid'],
-                                "type" : dupCandidateRecord['typeConditor'],
-                                "source" : dupCandidateRecord['source'],
+                                "idConditor" : dupCandidateRecord["idConditor"],
+                                "sourceUid" : dupCandidateRecord["sourceUid"],
+                                "type" : dupCandidateRecord["typeConditor"],
+                                "source" : dupCandidateRecord["source"],
                                 "deduplicateRules" : comp.comment,
                             }
                         )

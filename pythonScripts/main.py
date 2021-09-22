@@ -12,7 +12,7 @@ from deduplicate.deduplicate import Record
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('docobject_string', type=str)
+parser.add_argument("docobject_string", type=str)
 args = parser.parse_args()
 
 docObjects = json.loads(args.docobject_string)
@@ -21,4 +21,4 @@ for docObject in docObjects :
     record = Record(docObject)
     duplicate = record.deduplicate()
     sys.stdout.write(json.dumps(duplicate))
-    sys.stdout.write('\n')
+    sys.stdout.write("\n")

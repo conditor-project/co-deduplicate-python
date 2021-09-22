@@ -23,7 +23,7 @@ class Notice :
         self.nnt = notice["nnt"] if "nnt" in notice else None
 
         # Content
-        self.titleDefault = notice["title"]['default'] if "title" in notice else None
+        self.titleDefault = notice["title"]["default"] if "title" in notice else None
         self.en = notice["title"]["en"] if "title" in notice else None
         self.fr = notice["title"]["fr"] if "title" in notice else None
         self.titleDict = {"default" : self.titleDefault, "en" : self.en, "fr" : self.fr}
@@ -49,13 +49,13 @@ class Notice :
         # Others
         self.typeConditor = notice["typeConditor"] if "typeConditor" in notice else None
         self.idConditor = notice["idConditor"] if "idConditor" in notice else None
-        self.sourceUid = notice['sourceUid'] if "sourceUid" in notice else None
+        self.sourceUid = notice["sourceUid"] if "sourceUid" in notice else None
 
 def getSettlement(teiblob) :
     """
     Get settlement if possible for teiblob field
     """
-    decodeTeiblob = base64.b64decode(teiblob).decode('utf8')
+    decodeTeiblob = base64.b64decode(teiblob).decode("utf8")
     root = ET.fromstring(decodeTeiblob)
     dictionary = {}
 
@@ -64,7 +64,7 @@ def getSettlement(teiblob) :
         dictionary.setdefault("begin", None)
         dictionary.setdefault("settlement", None)
         try :
-            dictionary['title'] = next(child.iter("{http://www.tei-c.org/ns/1.0}title", )).text
+            dictionary["title"] = next(child.iter("{http://www.tei-c.org/ns/1.0}title", )).text
         except :
             pass
 
@@ -83,13 +83,13 @@ def getSettlement(teiblob) :
 
 
 def getSameBeginSequence(string1, string2) :
-    return ''.join(el[0] for el in it.takewhile(lambda t: t[0] == t[1], zip(string1, string2)))
+    return "".join(el[0] for el in it.takewhile(lambda t: t[0] == t[1], zip(string1, string2)))
 
 def normalized(word) :
     if not isinstance(word, str) :
         word = str(word)
 
-    word = word.strip().translate(str.maketrans('', '', string.punctuation)) # Remove punctation
+    word = word.strip().translate(str.maketrans("", "", string.punctuation)) # Remove punctation
     word = normalize("NFKD", word) # Replace some char like \xx
     word = unidecode.unidecode(word).lower() # lower case and remove accent
     return word
@@ -243,20 +243,20 @@ def comparePublicationSource(publiSource1,publiSource2) :
     else :
         d = []
         try :
-            beginDate1 = str(publiSource1['begin']).lower().strip()
-            beginDate2 = str(publiSource2['begin']).lower().strip()
+            beginDate1 = str(publiSource1["begin"]).lower().strip()
+            beginDate2 = str(publiSource2["begin"]).lower().strip()
         except ValueError as err :
             raise err
 
         try :
-            title1 = str(publiSource1['title']).lower().strip()
-            title2 = str(publiSource2['title']).lower().strip()
+            title1 = str(publiSource1["title"]).lower().strip()
+            title2 = str(publiSource2["title"]).lower().strip()
         except ValueError as err :
             raise err
 
         try :
-            settlement1 = str(publiSource1['settlement']).lower().strip()
-            settlement2 = str(publiSource2['settlement']).lower().strip()
+            settlement1 = str(publiSource1["settlement"]).lower().strip()
+            settlement2 = str(publiSource2["settlement"]).lower().strip()
         except ValueError as err :
             raise err
 
@@ -460,9 +460,9 @@ class NoticeComparison :
         self.status = True
 
     def decision(self) :
-        '''
+        """
         Map a quintuple to a decision.
-        '''
+        """
         if self.status :
             try :
                 tup = tuple(self.validation_dict.values())
