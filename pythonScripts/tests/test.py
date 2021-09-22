@@ -8,6 +8,10 @@ parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, parentDirectory)
 
 from deduplicate.deduplicate import Record
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 
 # Check if docObject contains idConditor and sourceUid
@@ -71,7 +75,6 @@ class Test(unittest.TestCase) :
     def test_deduplicate(self) :
         rc7 = Record(record7)
         tt = rc7.deduplicate()
-        self.assertTrue("duplicates" in tt)
-
+        self.assertEqual(type(tt), list)
 if __name__ == "__main__" :
     unittest.main()
