@@ -475,4 +475,3 @@ class NoticeComparison :
 
     class Record(Notice):
         pass
-
