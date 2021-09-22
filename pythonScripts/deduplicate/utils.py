@@ -48,6 +48,7 @@ class Notice :
 
         # Others
         self.typeConditor = notice["typeConditor"] if "typeConditor" in notice else None
+        self.idConditor = notice["idConditor"] if "idConditor" in notice else None
         self.sourceUid = notice['sourceUid'] if "sourceUid" in notice else None
 
 def getSettlement(teiblob) :
