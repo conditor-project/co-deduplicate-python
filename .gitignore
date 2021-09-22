@@ -1,3 +1,10 @@
+# JavaScript
 node_modules
+
+# Python
 __pycache__
+.ipynb_checkpoints
+*.ipynb
+
+# Other
 .env
