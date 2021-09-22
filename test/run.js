@@ -9,7 +9,7 @@ const business = require('../index.js');
 const { expect } = chai;
 
 describe('index.js', () => {
-  const data = require('./dataset/in/goodDocObjects.json');
+  const data = require('./dataset/in/goodDocObject.json');
 
   describe('#beforeAnyJob', () => {
     it('Python and Pip are installed on the system.', (done) => {

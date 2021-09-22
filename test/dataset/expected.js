@@ -1,9 +1,9 @@
 const correct = {
-  idConditor: '1Dgw28KflQK_d53pTkh3FExAc',
-  sourceUid: 'hal$hal-00994781',
+  deduplicateRules: '1id, 1page, 1vol, 1source, 1title',
+  idConditor: 'i07Wkbm8lC34EcMKDo1kL9jLN',
+  source: 'crossref',
+  sourceUid: 'crossref$10.1016/j.resmic.2019.02.003',
   type: 'Article',
-  source: 'hal',
-  comment: '1id, 1page, 1vol, 1source, 1title',
 };
 
 module.exports = {

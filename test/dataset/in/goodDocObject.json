@@ -1,0 +1,31 @@
+[
+  {
+    "pageRange": "165-170",
+    "duplicates": [],
+    "issue": "3",
+    "documentType": [
+      "Journal Article"
+    ],
+    "isbn": [],
+    "typeConditor": "Article",
+    "eissn": [
+      "1769-7123"
+    ],
+    "title": {
+      "default": "Description of Klebsiella africanensis sp. nov., Klebsiella variicola subsp. tropicalensis subsp. nov. and Klebsiella variicola subsp. variicola subsp. nov.",
+      "monography": "",
+      "journal": "Research in microbiology",
+      "en": "Description of Klebsiella africanensis sp. nov., Klebsiella variicola subsp. tropicalensis subsp. nov. and Klebsiella variicola subsp. variicola subsp. nov.",
+      "fr": "",
+      "meeting": ""
+    },
+    "pmId": "30817987",
+    "idConditor": "J62G2GM9U8xY4GSlLzpVCDPg4",
+    "volume": "170",
+    "sourceUid": "pubmed$30817987",
+    "issn": [],
+    "publicationDate": "2019",
+    "doi": "10.1016/j.resmic.2019.02.003",
+    "_score": 1.8939856
+  }
+]
