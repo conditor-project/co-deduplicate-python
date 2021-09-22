@@ -15,10 +15,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument('docobject_string', type=str)
 args = parser.parse_args()
 
-corpus = json.loads(args.docobject_string)
+docObjects = json.loads(args.docobject_string)
 
-for data in corpus :
-    record = Record(data)
+for docObject in docObjects :
+    record = Record(docObject)
     duplicate = record.deduplicate()
     sys.stdout.write(json.dumps(duplicate))
     sys.stdout.write('\n')
