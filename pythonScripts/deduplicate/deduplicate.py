@@ -99,16 +99,16 @@ class Record :
 
     def deduplicate(self) :
         if not isinstance(self.record, dict) :
-            return {"error" : {"code" : 104, "type" : "<class 'Type'>", "message" : "Must be an Object"}}
+            return {"error" : {"code" : 104, "type" : "TypeError", "message" : "Must be an Object"}}
 
         if not bool(self.record):
-            return {"error" : {"code" : 103, "type" : "<class 'ValueError'>", "message" : "Empty object"}}
+            return {"error" : {"code" : 103, "type" : "ValueError", "message" : "Empty object"}}
 
         if "idConditor" not in self.record :
-            return {"error" : {"code" : 102, "type" : "<class 'KeyError'>", "message" : "KeyError('idConditor')"}}
+            return {"error" : {"code" : 102, "type" : "KeyError", "message" : "The docObject must have an 'idConditor' key"}}
 
         if "sourceUid" not in self.record :
-            return {"error" : {"code" : 101, "type" : "<class 'KeyError'>", "message" : "KeyError('sourceUid')"}}
+            return {"error" : {"code" : 101, "type" : "KeyError", "message" : "The docObject must have an 'sourceUid' key"}}
 
 
         try :

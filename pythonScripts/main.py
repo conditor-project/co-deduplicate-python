@@ -20,5 +20,7 @@ docObjects = json.loads(args.docobject_string)
 for docObject in docObjects :
     record = Record(docObject)
     duplicate = record.deduplicate()
-    sys.stdout.write(json.dumps(duplicate))
-    sys.stdout.write("\n")
+    if "error" in duplicate :
+        sys.stderr.write(json.dumps(duplicate))
+    else :
+        sys.stdout.write(json.dumps(duplicate))
