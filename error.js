@@ -1,5 +1,6 @@
 const errorList = {
   JSONParsingError: 'JSONParsingError',
+  MalformedDocObjectError: 'MalformedDocObjectError',
   MissingDuplicatesKeyError: 'MissingDuplicatesKeyError',
   WriteFileError: 'WriteFileError',
 };
@@ -23,6 +24,15 @@ const list = [
 
       docObject.errCode = errorList.MissingDuplicatesKeyError;
       docObject._errMsg = 'Le JSON renvoyé par le script Python ne contient pas de tableau \'duplicates\'.';
+
+      return err;
+    },
+  },
+  {
+    name: errorList.MalformedDocObjectError,
+    handle: (err, docObject) => {
+      docObject.errCode = errorList.MalformedDocObjectError;
+      docObject._errMsg = `Le script Python a renvoyé une erreur: ${err.message}`;
 
       return err;
     },

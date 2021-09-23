@@ -28,6 +28,20 @@ business.doTheJob = (docObject, callback) => {
     }
   });
 
+  pythonProcess.stderr.on('data', (errString) => {
+    let errParsed;
+    try {
+      errParsed = JSON.parse(errString.toString()).error;
+    } catch (error) {
+      errInPythonProcess = handleError(docObject, errorList.JSONParsingError);
+      return;
+    }
+
+    const err = new Error(errParsed.message);
+    err.name = errParsed.type;
+    errInPythonProcess = handleError(docObject, errorList.MalformedDocObjectError, err);
+  });
+
   pythonProcess.on('close', (code) => {
     if (errInPythonProcess) return callback(errInPythonProcess);
 
