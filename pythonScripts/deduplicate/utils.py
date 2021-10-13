@@ -7,11 +7,6 @@ import base64
 import itertools as it
 from unicodedata import normalize
 import xml.etree.ElementTree as ET
-
-# Set path for importing deduplicate module
-parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, parentDirectory)
-
 from deduplicate.params import decisionGrid, typeConditorCategory, titleStopwords
 
 class Notice :
@@ -23,7 +18,7 @@ class Notice :
         self.nnt = notice["nnt"] if "nnt" in notice else None
 
         # Content
-        self.titleDefault = notice["title"]["default"] if "title" in notice else None
+        self.titleDefault = notice["title"]['default'] if "title" in notice else None
         self.en = notice["title"]["en"] if "title" in notice else None
         self.fr = notice["title"]["fr"] if "title" in notice else None
         self.titleDict = {"default" : self.titleDefault, "en" : self.en, "fr" : self.fr}
@@ -49,13 +44,13 @@ class Notice :
         # Others
         self.typeConditor = notice["typeConditor"] if "typeConditor" in notice else None
         self.idConditor = notice["idConditor"] if "idConditor" in notice else None
-        self.sourceUid = notice["sourceUid"] if "sourceUid" in notice else None
+        self.sourceUid = notice['sourceUid'] if "sourceUid" in notice else None
 
 def getSettlement(teiblob) :
     """
     Get settlement if possible for teiblob field
     """
-    decodeTeiblob = base64.b64decode(teiblob).decode("utf8")
+    decodeTeiblob = base64.b64decode(teiblob).decode('utf8')
     root = ET.fromstring(decodeTeiblob)
     dictionary = {}
 
@@ -64,7 +59,7 @@ def getSettlement(teiblob) :
         dictionary.setdefault("begin", None)
         dictionary.setdefault("settlement", None)
         try :
-            dictionary["title"] = next(child.iter("{http://www.tei-c.org/ns/1.0}title", )).text
+            dictionary['title'] = next(child.iter("{http://www.tei-c.org/ns/1.0}title", )).text
         except :
             pass
 
@@ -83,13 +78,13 @@ def getSettlement(teiblob) :
 
 
 def getSameBeginSequence(string1, string2) :
-    return "".join(el[0] for el in it.takewhile(lambda t: t[0] == t[1], zip(string1, string2)))
+    return ''.join(el[0] for el in it.takewhile(lambda t: t[0] == t[1], zip(string1, string2)))
 
 def normalized(word) :
     if not isinstance(word, str) :
         word = str(word)
 
-    word = word.strip().translate(str.maketrans("", "", string.punctuation)) # Remove punctation
+    word = word.strip().translate(str.maketrans('', '', string.punctuation)) # Remove punctation
     word = normalize("NFKD", word) # Replace some char like \xx
     word = unidecode.unidecode(word).lower() # lower case and remove accent
     return word
@@ -234,8 +229,6 @@ def getNoticeFromSourceUid(sourceUid, indexor):
 
 
 def comparePublicationSource(publiSource1,publiSource2) :
-    publiSource1 = publiSource1
-    publiSource2 = publiSource2
 
     if not publiSource1 or not publiSource2 :
         return 0
@@ -243,20 +236,20 @@ def comparePublicationSource(publiSource1,publiSource2) :
     else :
         d = []
         try :
-            beginDate1 = str(publiSource1["begin"]).lower().strip()
-            beginDate2 = str(publiSource2["begin"]).lower().strip()
+            beginDate1 = str(publiSource1['begin']).lower().strip()
+            beginDate2 = str(publiSource2['begin']).lower().strip()
         except ValueError as err :
             raise err
 
         try :
-            title1 = str(publiSource1["title"]).lower().strip()
-            title2 = str(publiSource2["title"]).lower().strip()
+            title1 = str(publiSource1['title']).lower().strip()
+            title2 = str(publiSource2['title']).lower().strip()
         except ValueError as err :
             raise err
 
         try :
-            settlement1 = str(publiSource1["settlement"]).lower().strip()
-            settlement2 = str(publiSource2["settlement"]).lower().strip()
+            settlement1 = str(publiSource1['settlement']).lower().strip()
+            settlement2 = str(publiSource2['settlement']).lower().strip()
         except ValueError as err :
             raise err
 
@@ -264,7 +257,7 @@ def comparePublicationSource(publiSource1,publiSource2) :
         d.append(check(settlement1, settlement2))
         d.append(check(title1, title2))
 
-        if 1 == d :
+        if sum(d)>=1 :
             return 1
 
         elif -1 in d :
@@ -273,8 +266,12 @@ def comparePublicationSource(publiSource1,publiSource2) :
         return 0
 
 def compareIssn(issn1, issn2) :
-    issn1 = "".join(str(issn1).strip().lower().split("-"))
-    issn2 = "".join(str(issn2).strip().lower().split("-"))
+
+    if isinstance(issn1, str) and isinstance(issn2, str) :  
+        issn1 = "".join(issn1.strip().lower().split("-"))
+        issn2 = "".join(issn2.strip().lower().split("-"))
+    else : 
+        return 0
     return check(issn1, issn2)
 
 
@@ -374,12 +371,6 @@ def compareTitle(titleDict1, titleDict2, threshold = .2) :
     return -1
 
 
-# def compareTitle(titleDict1, titleDict2, threshold = .2) :
-#     dist = sequenceDistance(titleDict1["default"], titleDict2["default"])
-#     if dist <= threshold :
-#         return 1
-#     return -1
-
 
 
 class NoticeComparison :
@@ -460,9 +451,9 @@ class NoticeComparison :
         self.status = True
 
     def decision(self) :
-        """
+        '''
         Map a quintuple to a decision.
-        """
+        '''
         if self.status :
             try :
                 tup = tuple(self.validation_dict.values())
