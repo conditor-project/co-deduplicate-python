@@ -267,10 +267,10 @@ def comparePublicationSource(publiSource1,publiSource2) :
 
 def compareIssn(issn1, issn2) :
 
-    if isinstance(issn1, str) and isinstance(issn2, str) :  
+    if isinstance(issn1, str) and isinstance(issn2, str) :
         issn1 = "".join(issn1.strip().lower().split("-"))
         issn2 = "".join(issn2.strip().lower().split("-"))
-    else : 
+    else :
         return 0
     return check(issn1, issn2)
 
