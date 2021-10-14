@@ -1,159 +1,136 @@
 import os
 import sys
 import json
+# import pathlib
 from elasticsearch import RequestsHttpConnection
 from elasticsearch import Elasticsearch
 from nltk.stem import SnowballStemmer
 from nltk.stem import PorterStemmer
 from langdetect import detect
-
-# Set path for importing deduplicate module
-parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, parentDirectory)
-
-from deduplicate.utils import NoticeComparison
-from deduplicate.params import titleStopwords
+import dotenv
 
 
-# Load envrionment variables
-from dotenv import load_dotenv
-load_dotenv()
+dotenv.load_dotenv()
+
+from . import utils
+from . import params
 
 
-# Instantiate langdetect
-fr = SnowballStemmer("french")
+# Instaciantye langdetctor
+fr = SnowballStemmer('french')
 en = PorterStemmer()
 
 
 # Set connection config
-esUrl = os.environ.get("ES_URL", "http://localhost:9200")
-index = os.environ.get("INDEX")
-doc_type = os.environ.get("RECORD")
-proxies = json.loads(os.environ.get("PROXIES"))
-size = os.environ["RESPONSE_SIZE"]
+ES_URL = os.environ.get("ES_URL", "http://localhost:9200")
+INDEX = os.environ.get("INDEX")
+DOC_TYPE = os.environ.get("RECORD")
+HTTPS_PROXY = os.environ.get("HTTPS_PROXY")
+HTTP_PROXY = os.environ.get("HTTP_PROXY")
+proxies = {"https" : HTTPS_PROXY, "http" : HTTP_PROXY}
+SIZE = os.environ["RESPONSE_SIZE"]
 
 
 # Elastic search requests using proxies
-class MyConnection(RequestsHttpConnection):
+class Connection(RequestsHttpConnection):
     def __init__(self, *args, **kwargs):
-        proxies = kwargs.pop("proxies", {})
-        super(MyConnection, self).__init__(*args, **kwargs)
+        proxies = kwargs.pop('proxies', {})
+        super(Connection, self).__init__(*args, **kwargs)
         self.session.proxies = proxies
 
 
-class ESRequest() :
-    def __init__(self, esUrl = esUrl, index = index, proxies = proxies, size = size) :
-        self.esUrl = esUrl
-        self.index = index
-        self.proxies = proxies
-        self.es = Elasticsearch(
-            [self.esUrl],
-            connection_class = self.Connection,
-            proxies = proxies,
-            size = size
-        )
-
-    class Connection(MyConnection) :
-        pass
-
+def ES_request(es_url, connection_class, proxies, size) :
+    return Elasticsearch(
+        [es_url],
+        connection_class = connection_class,
+        proxies = proxies,
+        size = size
+    )
 
 # Instanciate elastic client and its request class
-esr = ESRequest()
-es = esr.es
+es = ES_request(
+    es_url=ES_URL,
+    connection_class= Connection,
+    proxies = proxies,
+    size = SIZE
+)
+
 
 class Record :
     def __init__(self, record, es = es) :
         self.record = record
         self.es = es
         self.dupList = []
+        self.result_field = ["deduplicateRules", "idConditor", "source", "sourceUid"]
 
     def myStemmer(self, sent) :
         lang = detect(sent)
         tokens = ([fr.stem(word) for word in sent.split()],[en.stem(word) for word in sent.split()])[lang == "fr"]
-        return " ".join([x for x in tokens if x not in titleStopwords])
+        return " ".join([x for x in tokens if x not in params.titleStopwords])
 
     def query(self) :
-        titleDefault = self.record["title"]["default"]
+        titleDefault = self.record['title']['default']
         req = self.myStemmer(titleDefault)
         body = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "match": {
-                                "title.default": {
-                                    "query" : req,
-                                    "fuzziness": "AUTO",
-                                    "minimum_should_match": "70%"
+            'query': {
+                'bool': {
+                    'must': [
+                        { 'match': {
+                            'title.default': {
+                            'query' : req,
+                            'fuzziness': "AUTO",
+                            'minimum_should_match': '70%'
                                 }
                             }
+                        }]
                         }
-                    ]
+                    }
                 }
-            }
-        }
 
-        res = self.es.search(index =index, body = body)
+        res = self.es.search(index = INDEX, body = body)
         return res
 
 
     def deduplicate(self) :
         if not isinstance(self.record, dict) :
-            return {"error" : {"code" : 104, "type" : "TypeError", "message" : "Must be an Object"}}
+            return {"error" : {"code" : 104, "type" : "<class 'Type'>", "message" : "Must be an Object"}}
 
         if not bool(self.record):
-            return {"error" : {"code" : 103, "type" : "ValueError", "message" : "Empty object"}}
+            return {"error" : {"code" : 103, "type" : "<class 'ValueError'>", "message" : "Empty object"}}
 
         if "idConditor" not in self.record :
-            return {"error" : {"code" : 102, "type" : "KeyError", "message" : "The docObject must have an 'idConditor' key"}}
+            return {"error" : {"code" : 102, "type" : "<class 'KeyError'>", "message" : "KeyError('idConditor')"}}
 
         if "sourceUid" not in self.record :
-            return {"error" : {"code" : 101, "type" : "KeyError", "message" : "The docObject must have an 'sourceUid' key"}}
+            return {"error" : {"code" : 101, "type" : "<class 'KeyError'>", "message" : "KeyError('sourceUid')"}}
 
 
         try :
             duplicatesIdConditor = [x["idConditor"] for x in self.record["duplicates"]]
-            duplicatesIdConditor.append(self.record["idConditor"])
-            res = self.query()
-
-            for i, rc in enumerate(res["hits"]["hits"]) :
-                dupCandidateRecord = rc["_source"]
-                comp = NoticeComparison(self.record, dupCandidateRecord)
-                comp.run()
-                if comp.result == 1 :
-                    if dupCandidateRecord["idConditor"] not in duplicatesIdConditor :
-                        self.dupList.append(
-                            {
-                                "idConditor" : dupCandidateRecord["idConditor"],
-                                "sourceUid" : dupCandidateRecord["sourceUid"],
-                                "type" : dupCandidateRecord["typeConditor"],
-                                "source" : dupCandidateRecord["source"],
-                                "deduplicateRules" : comp.comment,
-                            }
-                        )
-            return self.dupList
         except Exception as err :
             return {"error" : {"code" : 100, "type" : err.__class__, "message" : err}}
 
-if __name__ == "__main__" :
-    from time import time
-    import json
-    import sys
 
-    # Set path for importing deduplicate module
-    parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    sys.path.insert(0, parentDirectory)
+        if "idConditor" in self.record :
+            duplicatesIdConditor.append(self.record["idConditor"])
 
-    filename = os.path.join(parentDirectory, "tests/test.json")
-    print(filename)
-    with open(filename) as f :
-        datas = json.load(f)
-    for data in datas:
-        a = time()
-        record = Record(data)
+        res = self.query()
 
-        dup = record.deduplicate()
-        print(f"Time Elapsed {time() - a}")
-        print(data["idConditor"])
-        print(dup)
-        print()
+        if res["hits"] :
+            for i, rc in enumerate(res["hits"]["hits"]) :
+                dupCandidateRecord = rc["_source"]
+                comp = utils.NoticeComparison(self.record, dupCandidateRecord)
+                comp.run()
+                if comp.result == 1 :
+                    dico = {}
+                    for field in self.result_field :
+                        try :
+                            dico[field] = dupCandidateRecord[field]
+                        except : pass
+
+                    dico["deduplicateRules"] = comp.comment
+                    dico['type'] = dupCandidateRecord["typeConditor"]
+                    self.dupList.append(dico)
+
+            return [x for x in self.dupList if x["sourceUid"] != self.record["sourceUid"]]
+        else : return []
