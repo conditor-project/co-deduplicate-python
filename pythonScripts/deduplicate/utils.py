@@ -386,7 +386,7 @@ class NoticeComparison :
         self.threshold = threshold
         self.validation_dict = {}
         self.result = None
-        self.comment = None
+        self.duplicate_rules = None
         self.status = False
 
     def compareId(self):
@@ -424,18 +424,18 @@ class NoticeComparison :
         try :
             tup = tuple(self.validation_dict.values())
             if tup[0] == 1 and tup[4] == 1 and (self.n1.typeConditor == "Thèse" or self.n2.typeConditor == "Thèse" ):
-                self.result, self.comment = (1, "1id, 1title, typeConditor=thèse")
+                self.result, self.duplicate_rules = (1, "1id, 1title, typeConditor=thèse")
 
             elif typeConditorCategory[self.n1.typeConditor] != typeConditorCategory[self.n2.typeConditor] :
                 if (typeConditorCategory[self.n1.typeConditor] or typeConditorCategory[self.n2.typeConditor]) != "autre" :
-                    self.result, self.comment = decisionGrid[tup]
+                    self.result, self.duplicate_rules = decisionGrid[tup]
                 else :
-                    self.result, self.comment = (-1, "#typeConditor")
+                    self.result, self.duplicate_rules = (-1, "#typeConditor")
 
             else :
-                self.result, self.comment = decisionGrid[tup]
+                self.result, self.duplicate_rules = decisionGrid[tup]
         except :
-            self.result, self.comment = 99, "Record not available"
+            self.result, self.duplicate_rules = 99, "Record not available"
 
 
     def run(self) :
