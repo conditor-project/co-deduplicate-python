@@ -4,8 +4,6 @@ click==8.0.1
 elasticsearch==7.14.1
 idna==3.2
 joblib==1.0.1
-langdetect==1.0.9
-nltk==3.6.2
 python-dotenv==0.19.0
 regex==2021.8.28
 requests==2.26.0
