@@ -4,21 +4,36 @@ import sys
 import json
 import os
 import argparse
+import dotenv
+from deduplicate.connect2elastic import ES_request, Connection
+from deduplicate.deduplicate import RecordDeduplicate
 
-parentDirectory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, parentDirectory)
+dotenv.load_dotenv()
 
-from deduplicate.deduplicate import Record
 
 parser = argparse.ArgumentParser()
-
-parser.add_argument("docobject_string", type=str)
+parser.add_argument("docobject_string", type=str, nargs='?')
 args = parser.parse_args()
 
+
+URL =  os.getenv("URL")
+INDEX = os.getenv("INDEX")
+SIZE = os.getenv("SIZE")
+HTTPS_PROXY = os.getenv("HTTPS_PROXY")
+HTTP_PROXY = os.getenv("HTTP_PROXY")
+proxies = {"https" : HTTPS_PROXY, "http" : HTTP_PROXY}
+
+# Instanciate elastic client and its request class
+es = ES_request(
+    es_url=URL,
+    connection_class= Connection,
+    proxies = proxies,
+    size = SIZE
+)
 docObjects = json.loads(args.docobject_string)
 
 for docObject in docObjects :
-    record = Record(docObject)
+    record = RecordDeduplicate(docObject, es = es, index = INDEX)
     duplicate = record.deduplicate()
     if "error" in duplicate :
         sys.stderr.write(json.dumps(duplicate))
